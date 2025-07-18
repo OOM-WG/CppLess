@@ -29,7 +29,7 @@
 
 #define let(_, __) ([&](auto&& it) -> decltype(auto) __(_))
 
-#define run(__, ___)                             \
+#define also(__, ___)                            \
     ([&]<typename _>(_&& it) -> decltype(auto) { \
         ___;                                     \
         return std::forward<_>(it);              \
