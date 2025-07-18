@@ -17,8 +17,8 @@
 #define __cppless_concat_impl(a, b) a##b
 #define __cppless_concat(a, b)      __cppless_concat_impl(a, b)
 
-#define end_of_scope(_____)                                                               \
-    [[maybe_unused]] auto const __cppless_concat(__end_of_scope__,                        \
+#define defer_func(_____)                                                                 \
+    [[maybe_unused]] auto const __cppless_concat(__defer_func__,                          \
                                                  __COUNTER__) = [&]<typename _>(_&& __) { \
         struct ___ {                                                                      \
             _ __;                                                                         \
