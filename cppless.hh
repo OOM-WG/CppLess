@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include <initializer_list>
 #include <utility>
 
 #define __cppless_concat_impl(a, b) a##b
@@ -34,3 +35,32 @@
         ___;                                     \
         return std::forward<_>(it);              \
     }(__))
+
+template<typename T>
+class when {
+public:
+    explicit when(T const& v): val(v), ok(false) {}
+    template<class F>
+    when& add_case(T const& target, F&& func) {
+        if (!ok && val == target) ok = (func(val), true);
+        return *this;
+    }
+    template<class F>
+    when& add_case(std::initializer_list<T> targets, F&& func) {
+        if (!ok)
+            for (auto const& target : targets)
+                if (val == target) {
+                    ok = (func(val), true);
+                    break;
+                }
+        return *this;
+    }
+    template<class F>
+    void default_case(F&& func) {
+        if (!ok) func(val);
+    }
+
+private:
+    T const& val;
+    bool     ok;
+};
