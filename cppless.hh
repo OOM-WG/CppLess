@@ -18,14 +18,15 @@
 #define __cppless_concat_impl(a, b) a##b
 #define __cppless_concat(a, b)		__cppless_concat_impl(a, b)
 
-#define defer_func(_____)                                                                 \
-	[[maybe_unused]] auto const __cppless_concat(__defer_func__,                          \
-												 __COUNTER__) = [&]<typename _>(_&& __) { \
-		struct ___ {                                                                      \
-			_ __;                                                                         \
-			~___() { __(); }                                                              \
-		} ____{std::forward<_>(__)};                                                      \
-		return ____;                                                                      \
+#define defer_func(_____)                                    \
+	[[maybe_unused]]                                         \
+	auto const __cppless_concat(__defer_func__, __COUNTER__) \
+			= [&]<typename _>(_&& __) {                      \
+		struct ___ {                                         \
+			_ __;                                            \
+			~___() { __(); }                                 \
+		} ____ { std::forward<_>(__) };                      \
+		return ____;                                         \
 	}([&]() _____)
 
 #define let(_, __) ([&](auto&& it) -> decltype(auto) __(_))
@@ -38,13 +39,15 @@
 
 template<typename T>
 class when {
-public:
+   public:
 	explicit when(T const& v): val(v), ok(false) {}
+
 	template<class F>
 	when& add_case(T const& target, F&& func) {
 		if (!ok && val == target) ok = (func(val), true);
 		return *this;
 	}
+
 	template<class F>
 	when& add_case(std::initializer_list<T> targets, F&& func) {
 		if (!ok)
@@ -55,12 +58,13 @@ public:
 				}
 		return *this;
 	}
+
 	template<class F>
 	void default_case(F&& func) {
 		if (!ok) func(val);
 	}
 
-private:
+   private:
 	T const& val;
 	bool	 ok;
 };
